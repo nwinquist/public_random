@@ -59,6 +59,7 @@ public class Simulator extends Frame
 	public static final int K_SCORE_PERCENTIGE_FOR_GOOD = 99;
 	// A good, non-elevated step scores 9
 	public static final int K_SCORE_STEP_MAX = 9;
+	public static final long K_SLEEP_BEFORE_START_MS = 4000;
 	// How long to skip actual painting (because it is not needed so often)
 	public static final long K_SLOW_REPAINT_IGNORE_TIME_MS = 1000;
 	// Iterations, make all ants run K_T times (optional)
@@ -72,11 +73,12 @@ public class Simulator extends Frame
 	// to promote evolution. May help solve dead locks
 	// and spot seemingly impossible but yet feasible pathways.
 	// The "Touch Of God".
-	// Update: The word "May" above is a under statement. 
-	// Tests have shown, that it really works. (Maybe this "Touch of God" - 
+	// Update: The word "May" above is a under statement.
+	// Tests have shown, that it really works. (Maybe this "Touch of God" -
 	// technique already has a name? Please, enlighten me.)
-	public static int K_SCORE_PERCENTIGE_BAD_IS_GOOD_CHANCE = 1; // 0-100 %, default 1   
-	
+	public static int K_SCORE_PERCENTIGE_BAD_IS_GOOD_CHANCE = 1; // 0-100 %,
+																																// default 1
+
 	public static Simulator getInstance()
 		{
 		if (instance == null)
@@ -114,7 +116,7 @@ public class Simulator extends Frame
 		int k = K_TERRAIN_KICKS;
 		float e = K_FEROMON_EVAPORATION;
 		int t = K_T;
-		
+
 		if (args.length == 4)
 			{
 			a = Integer.parseInt(args[0]);
@@ -123,30 +125,24 @@ public class Simulator extends Frame
 			k = Integer.parseInt(args[3]);
 			}
 		instance = getInstance(a, w, h, k, e);
-		
+
 		// <DEBUG> OVERRIDE
 		if (DEBUG)
 			{
 			// OVERRIDE!
-			int table[][] = {
-						{ 0, 0, 9, 0, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9 },
-						{ 0, 0, 9, 8, 9, 0, 8, 0, 8, 0, 8, 0, 8, 0, 8 },
-						{ 0, 0, 9, 0, 9, 0, 8, 0, 8, 0, 8, 0, 8, 0, 8 },
-						{ 0, 0, 9, 0, 9, 0, 8, 0, 8, 0, 8, 0, 8, 0, 8 },
-						{ 5, 4, 9, 0, 9, 0, 8, 0, 8, 0, 8, 0, 8, 0, 8 },
-						{ 0, 6, 9, 0, 9, 0, 8, 0, 8, 0, 8, 0, 8, 0, 8 },
-						{ 0, 0, 8, 0, 9, 0, 8, 0, 8, 0, 8, 0, 8, 0, 8 },
-						{ 0, 0, 9, 5, 9, 0, 8, 0, 8, 0, 8, 0, 8, 0, 8 },
-						{ 0, 0, 9, 0, 9, 2, 8, 0, 8, 0, 8, 0, 8, 0, 8 }
-						};
+			int table[][] = { { 0, 0, 9, 0, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9 },
+					{ 0, 0, 9, 8, 9, 0, 8, 0, 8, 0, 8, 0, 8, 0, 8 }, { 0, 0, 9, 0, 9, 0, 8, 0, 8, 0, 8, 0, 8, 0, 8 },
+					{ 0, 0, 9, 0, 9, 0, 8, 0, 8, 0, 8, 0, 8, 0, 8 }, { 5, 4, 9, 0, 9, 0, 8, 0, 8, 0, 8, 0, 8, 0, 8 },
+					{ 0, 6, 9, 0, 9, 0, 8, 0, 8, 0, 8, 0, 8, 0, 8 }, { 0, 0, 8, 0, 9, 0, 8, 0, 8, 0, 8, 0, 8, 0, 8 },
+					{ 0, 0, 9, 5, 9, 0, 8, 0, 8, 0, 8, 0, 8, 0, 8 }, { 0, 0, 9, 0, 9, 2, 8, 0, 8, 0, 8, 0, 8, 0, 8 } };
 			instance.getColony().getGrid().setGrid(table);
 			a = 100;
 			instance.getColony().prepareAnts(a);
 			t = 50;
-			//Grid grid = instance.getColony().getGrid(); 
-			//grid.setStartingCell(grid.getCells()[5][7]); // FORCE START CELL
+			// Grid grid = instance.getColony().getGrid();
+			// grid.setStartingCell(grid.getCells()[5][7]); // FORCE START CELL
 			// <DEBUG/>
-			}		
+			}
 		instance.go(t);
 		}
 
@@ -189,7 +185,7 @@ public class Simulator extends Frame
 		setVisible(true);
 		try
 			{
-			Thread.sleep(8000);
+			Thread.sleep(K_SLEEP_BEFORE_START_MS);
 			} catch (InterruptedException e1)
 			{
 			// TODO Auto-generated catch block
@@ -207,10 +203,11 @@ public class Simulator extends Frame
 			// Diminish all the pheromon scents over time
 			colony.evaporate();
 			}
-		if (colony.getBestPathSoFar() != null) {
-		p("Best score: " + colony.getBestPathSoFar().getScore());
+		if (colony.getBestPathSoFar() != null)
+			{
+			p("Best score: " + colony.getBestPathSoFar().getScore());
 			p("Best path: " + colony.getBestPathSoFar().toString());
-		}
+			}
 		p("Visits in first trio");
 		colony.getGrid().get3CellsOnTheRight(colony.getGrid().getStartingCell())
 				.forEach(c -> p(c + " visits: " + c.getVisits()));
